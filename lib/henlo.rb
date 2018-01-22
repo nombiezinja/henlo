@@ -3,5 +3,7 @@ require "henlo/engine"
 require "henlo/refreshable"
 
 module Henlo
-  # Your code goes here...
+  def test
+    puts "this is a test"
+  end 
 end
