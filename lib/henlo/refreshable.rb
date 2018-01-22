@@ -1,9 +1,7 @@
-module Henlo
-  class Refreshable
+module Henlo::Refreshable
 
-    def self.say_henlo(name)
-      puts "henlo #{name}"
-    end 
-
+  def self.say_henlo(name)
+    puts "henlo #{name}"
   end 
+
 end 
