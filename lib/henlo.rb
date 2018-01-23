@@ -12,5 +12,6 @@ module Henlo
   def self.hi_again 
     puts "this is a hi again"
   end 
-  
+
+  module_function :hi_again
 end
