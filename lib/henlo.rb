@@ -6,9 +6,13 @@ require "henlo/engine"
 
 module Henlo
   
-  def generate_henlo 
-    puts "running"
-    # generate_identifiable
+  def self.generate_henlo(user, options={})
+    env = options[:env] || ENV['RAILS_ENV'] 
+    henlo = Hash[
+      id_token: Identifiable.generate_identifiable(user)
+    ]
+    henlo[:refresh_token] = Refreshable.generate_refreshable(user) unless env == 'development'
+    henlo 
   end 
 
 end
