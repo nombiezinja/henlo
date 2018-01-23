@@ -7,8 +7,9 @@ module Henlo::Refreshable
   def self.it_works 
     puts "it works"
   end 
-  
-  def self.generate_henlo(user)
+
+  def self.generate_refreshable(user)
+    puts Knock::AuthToken.new(payload: {user_id: 3, device_id: 'device1'}).token
     puts ENV['RAILS_ENV']
   end 
 

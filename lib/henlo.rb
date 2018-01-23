@@ -1,17 +1,14 @@
 require "henlo/version"
 require "henlo/refreshable"
+require "henlo/identifiable"
 require "henlo/engine"
 
 
 module Henlo
   
-  def self.hi_there
-    puts "this is a test"
-  end 
-  
-  def self.hi_again 
-    puts "this is a hi again"
+  def generate_henlo 
+    puts "running"
+    # generate_identifiable
   end 
 
-  module_function :hi_again
 end
