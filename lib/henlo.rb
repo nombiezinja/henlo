@@ -16,10 +16,10 @@ module Henlo
   end 
 
   mattr_accessor :refresh_token_lifetime
-  self.refresh_token_lifetime = 1.day
+  self.refresh_token_lifetime = 15.days
    
-  mattr_accessor :token_lifetime
-  self.id_token_lifetime = 1.day
+  mattr_accessor :id_token_lifetime
+  self.id_token_lifetime = 60 * 15
 
   # Default way to setup Henlo. Run `rails generate henlo:install` to create
   # a fresh initializer with all configuration values.
