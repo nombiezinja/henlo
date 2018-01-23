@@ -4,4 +4,8 @@ module Henlo::Refreshable
     puts "henlo #{name}"
   end 
 
+  def self.generate_henlo(user)
+    puts ENV['RAILS_ENV']
+  end 
+
 end 
