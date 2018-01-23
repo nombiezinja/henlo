@@ -9,10 +9,24 @@ module Henlo
   def self.generate_henlo(user, options={})
     env = options[:env] || ENV['RAILS_ENV'] 
     henlo = Hash[
-      id_token: Identifiable.generate_identifiable(user)
+      id_token: Identifiable.generate_identifiable(user, env)
     ]
     henlo[:refresh_token] = Refreshable.generate_refreshable(user) unless env == 'development'
     henlo 
   end 
 
+  mattr_accessor :refresh_token_lifetime
+  self.refresh_token_lifetime = 1.day
+   
+  mattr_accessor :token_lifetime
+  self.id_token_lifetime = 1.day
+
+  # Default way to setup Henlo. Run `rails generate henlo:install` to create
+  # a fresh initializer with all configuration values.
+  def self.setup
+    yield self
+  end
+
+
 end
+
