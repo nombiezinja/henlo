@@ -1,18 +1,17 @@
 require "henlo/version"
 require "henlo/refreshable"
 require "henlo/identifiable"
-require "henlo/engine"
+# require "henlo/engine"
 
 
 module Henlo
   
   def self.generate_henlo(user, options={})
-    env = options[:env] || ENV['RAILS_ENV'] 
+    claim = options || nil 
     henlo = Hash[
-      id_token: Identifiable.generate_identifiable(user, env)
+      id_token: Identifiable.generate_identifiable(user, options),
+      refresh_token: Refreshable.generate_refreshable(user) 
     ]
-    henlo[:refresh_token] = Refreshable.generate_refreshable(user) unless env == 'development'
-    henlo 
   end 
 
   mattr_accessor :refresh_token_lifetime
