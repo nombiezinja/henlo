@@ -16,7 +16,7 @@ module Henlo
   end 
 
   mattr_accessor :refresh_token_lifetime
-  self.refresh_token_lifetime = 15.days
+  self.refresh_token_lifetime = 15
    
   mattr_accessor :id_token_lifetime
   self.id_token_lifetime = 60 * 15

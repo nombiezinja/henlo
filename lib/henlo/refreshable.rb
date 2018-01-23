@@ -1,7 +1,8 @@
 module Henlo::Refreshable
 
   def self.generate_refreshable(user)
-    Knock::AuthToken.new(payload: {user_id: user.id, device_id: 'device1', exp: Time.now.utc.to_i + 86400 * 180}).token
+    exp = Henlo.refresh_token_lifetime + Time.now.utc.to_i
+    Knock::AuthToken.new(payload: {user_id: user.id, device_id: 'device1', exp: exp}).token
   end 
 
 end 

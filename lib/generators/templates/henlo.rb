@@ -1,13 +1,15 @@
 Henlo.setup do |config|
 
+  ## All expiration claims use seconds as unit
+
   ## Refresh token expiration claim
   ## ----------------
   ##
   ## How long before a refresh token is expired. If nil is provided, token will
   ## last forever.
   ##
-  ## Default:
-  # config.refresh_token_lifetime = 15.days
+  ## Default is 15 days
+  # config.refresh_token_lifetime = 15 * 86400
 
   ## Id token expiration claim
   ## ----------------
