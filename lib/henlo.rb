@@ -19,14 +19,6 @@ module Henlo
     ]
   end
 
-  def self.parse_token_type(token)
-    Knock::AuthToken.new(token: token).payload.type
-  end 
-  
-  def self.it_me?(access_token)
-
-  end 
-
   mattr_accessor :refresh_token_lifetime
   self.refresh_token_lifetime = 15 * 86400
    
