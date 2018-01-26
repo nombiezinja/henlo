@@ -1,25 +1,30 @@
 require "henlo/version"
 require "henlo/refreshable"
 require "henlo/identifiable"
-# require "henlo/engine"
-
 
 module Henlo
   
   def self.generate_henlos(user, options={})
     claim = options || nil 
-    refresh_token_and_jti = Refreshable.generate_refreshable(user) 
+    refresh_token_and_jti = Refreshable.generate_refreshable(user, options) 
+    id_token_and_exp = Identifiable.generate_identifiable(user, options)
     tokens = Hash[
-      id_token: Identifiable.generate_identifiable(user, options),
+      id_token: id_token_and_exp[:token],
       refresh_token: refresh_token_and_jti[:token]
     ]
     henlos = Hash[
       tokens: tokens, 
-      jti: refresh_token_and_jti[:jti]
+      jti: refresh_token_and_jti[:jti],
+      exp: id_token_and_exp[:exp]
     ]
   end
+
+  def self.parse_token_type(token)
+    Knock::AuthToken.new(token: token).payload.type
+  end 
   
   def self.it_me?(access_token)
+
   end 
 
   mattr_accessor :refresh_token_lifetime

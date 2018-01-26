@@ -10,10 +10,11 @@ module Henlo::Refreshable
     
     claim[:exp] = exp
     claim[:jti] = jti 
+    claim[:type] = "refresh"
     
     Hash[
       token: Knock::AuthToken.new(payload: claim).token, 
-      jti: jti 
+      jti: jti       
     ]
   end 
 
