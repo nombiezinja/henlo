@@ -18,10 +18,6 @@ module Henlo::Refreshable
     ]
   end 
   
-  def self.refresh_henlos()
-    puts "henlo"
-  end 
-
   def refresh_token_expired 
     redirect_to user_sign_in_url
   end 

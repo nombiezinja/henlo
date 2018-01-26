@@ -13,13 +13,18 @@ module Henlo::Authenticatable
       when 'id'
         super 
       when 'refresh'
-        refresh_henlos
+        reissue_tokens 
       else
         render_401 
       end 
     rescue JWT::ExpiredSignature
-      Henlo::Refreshable.jwt_expired
+      if token_type == 'refresh'
+        verify_user
+      else
+        raise ActionController::InvalidAuthenticityToken 
+      end 
     end 
+    
   end 
   
 
