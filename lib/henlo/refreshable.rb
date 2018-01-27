@@ -5,21 +5,21 @@ module Henlo::Refreshable
   def self.generate_refreshable(model, options={})
     claim = options || nil 
     
-    exp = Time.now.utc.to_i + Henlo.refresh_token_lifetime
-    jti = Henlo::Helpers::Util.generate_jti
-    
-    claim[:exp] = exp
-    claim[:jti] = jti 
-    claim[:type] = "refresh"
+    claim.merge!({
+      exp: Time.now.utc.to_i + Henlo.refresh_token_lifetime, 
+      jti: Henlo::Helpers::Util.generate_jti,
+      type: "refresh"
+    })
     
     Hash[
       token: Knock::AuthToken.new(payload: claim).token, 
-      jti: jti       
+      jti: claim[:jti]       
     ]
+    
   end 
   
-  def refresh_token_expired 
-    redirect_to user_sign_in_url
+  def self.store_jti(resource, jti)
+    resource.update_attribute(:refresh_token_jti, jti)
   end 
 
 end 

@@ -1,8 +1,13 @@
 require "henlo/version"
 require "henlo/refreshable"
 require "henlo/identifiable"
+require "henlo/authenticable"
+require "henlo/revocable"
+require "knock"
 
 module Henlo
+
+  # include Knock::Authenticable
   
   def self.generate_henlos(user, options={})
     claim = options || nil 

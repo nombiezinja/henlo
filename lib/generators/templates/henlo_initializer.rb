@@ -19,5 +19,5 @@ Henlo.setup do |config|
   ## This value is provided in seconds
   ## Default is 15 minutes
   # config.id_token_lifetime = 60 * 15
-
+  
 end
