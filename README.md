@@ -32,6 +32,7 @@ authenticate_user (therefore you must require the Knock module as per Knock docs
 
 Uses payload id to find resource
 
+rescue from jwt expired and invalid authenticity token
 
 ## Development
 

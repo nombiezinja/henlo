@@ -11,7 +11,7 @@ module Henlo::Authenticable
   end 
 
   def self.it_not_fren?(resource)
-    BlacklistedToken.where(token_jti: resource.refresh_token_jti)
+    BlacklistedToken.where(token_jti: resource.refresh_token_jti).first
   end 
 
   def self.parse_resource(payload, model)
@@ -19,16 +19,12 @@ module Henlo::Authenticable
   end 
 
   def self.it_me?(token, model )
-    begin 
-      # claim = Knock::AuthToken.new(token: token).payload
-      type = parse_token_type(token)
-    rescue JWT::ExpiredSignature
-      it_expired(token)
-    end 
+    type = parse_token_type(token)
     payload = Knock::AuthToken.new(token: token).payload
     resource = parse_resource(payload, model)
     case type 
     when "id"
+      Rails::ApplicationController.verify_user
       resource
     when "refresh"
       if it_suspicious?(resource) && it_not_fren?(resource)
@@ -41,13 +37,14 @@ module Henlo::Authenticable
     end 
   end 
 
-  def self.it_expired(token_type)
-    if token_type == 'refresh'
-      # verify_user
-      puts "verify_user here"
-    else
-      raise ActionController::InvalidAuthenticityToken 
+  def self.it_expired(reauthenticate_strategy, token)
+    begin 
+      type = parse_token_type(token)
+    rescue JWT::ExpiredSignature
+      raise ActionController::InvalidAuthenticityToken
     end 
+    
+    reauthenticate_strategy unless type == "id"
   end 
 
 end 

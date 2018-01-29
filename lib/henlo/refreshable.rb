@@ -15,7 +15,6 @@ module Henlo::Refreshable
       token: Knock::AuthToken.new(payload: claim).token, 
       jti: claim[:jti]       
     ]
-    
   end 
   
   def self.store_jti(resource, jti)
