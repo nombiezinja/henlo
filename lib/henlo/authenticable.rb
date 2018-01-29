@@ -1,8 +1,8 @@
 require "henlo/helpers/util"
 module Henlo::Authenticable
     
-  def self.parse_token_type(token)
-    claim = Knock::AuthToken.new(token: token).payload
+  def self.parse_token_type(token, options={})
+    claim = Knock::AuthToken.new(token: token, verify_options: options).payload
     claim["type"]
   end 
   
@@ -18,7 +18,7 @@ module Henlo::Authenticable
     model.capitalize.constantize.find(payload["sub"])
   end 
 
-  def self.it_me?(token, model )
+  def self.it_me?(token, model)
     type = parse_token_type(token)
     payload = Knock::AuthToken.new(token: token).payload
     resource = parse_resource(payload, model)
@@ -37,14 +37,15 @@ module Henlo::Authenticable
     end 
   end 
 
-  def self.it_expired(reauthenticate_strategy, token)
-    begin 
-      type = parse_token_type(token)
-    rescue JWT::ExpiredSignature
-      raise ActionController::InvalidAuthenticityToken
-    end 
-    
-    reauthenticate_strategy unless type == "id"
+  def self.it_expired(reauthenticate_strategy, token, model)
+    token = Knock::AuthToken.new(token: token, verify_options: {verify_expiration: false}).token
+    claim = Knock::AuthToken.new(token: token, verify_options: {verify_expiration: false}).payload
+    resource = parse_resource(claim, model)
+    if claim["type"] == "id"
+      raise ActionController::InvalidAuthenticityToken 
+    else 
+      reauthenticate_strategy unless resource.nil?
+    end     
   end 
 
 end 
