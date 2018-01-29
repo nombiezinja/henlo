@@ -2,17 +2,12 @@ require "henlo/helpers/util"
 module Henlo::Authenticable
     
   def self.parse_token_type(token)
-    begin 
-      claim = Knock::AuthToken.new(token: token).payload
-    rescue JWT::ExpiredSignature
-      it_expired(token)
-    end 
-    puts ":claim in parse_token_type is #{claim}"
+    claim = Knock::AuthToken.new(token: token).payload
     claim["type"]
   end 
   
   def self.it_suspicious?(resource)
-    true unless resource.check_blacklist?    
+    resource.blacklist_check?    
   end 
 
   def self.it_not_fren?(resource)
@@ -20,17 +15,17 @@ module Henlo::Authenticable
   end 
 
   def self.parse_resource(payload, model)
-    puts "running"
-    puts payload
     model.capitalize.constantize.find(payload["sub"])
   end 
 
   def self.it_me?(token, model )
-    type = parse_token_type(token)
-    puts "type is #{type}"
-    puts Knock::AuthToken.new(token: token).inspect
+    begin 
+      # claim = Knock::AuthToken.new(token: token).payload
+      type = parse_token_type(token)
+    rescue JWT::ExpiredSignature
+      it_expired(token)
+    end 
     payload = Knock::AuthToken.new(token: token).payload
-    puts payload
     resource = parse_resource(payload, model)
     case type 
     when "id"
@@ -46,7 +41,6 @@ module Henlo::Authenticable
     end 
   end 
 
-  
   def self.it_expired(token_type)
     if token_type == 'refresh'
       # verify_user
