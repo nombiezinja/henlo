@@ -1,7 +1,12 @@
 require "henlo/helpers/util"
 
+#
+## Generates id token. The id token is used to identify and authenticate the user before 
+## responding to a request
 module Henlo::Identifiable
-
+  
+  # Generates id token and returns both the token, with the optional payload encoded, and the
+  ## token expiry time in unix seconds
   def self.generate_identifiable(options={})
     claim = options || nil 
    

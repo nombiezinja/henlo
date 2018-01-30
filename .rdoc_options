@@ -1,0 +1,23 @@
+--- !ruby/object:RDoc::Options
+encoding: UTF-8
+static_path: []
+rdoc_include:
+- ".rb"
+- ".rake"
+charset: UTF-8
+exclude: !ruby/regexp /\/db|\/tmp|\/spec\/support|\/test|\/config|\/bin|\/vendor|ActiveSupport|config.ru|Gemfile|\/app\/channels|.css|.js|.html|robots|.log|Rakefile|.rake|application_record.rb/
+hyperlink_all: false
+line_numbers: false
+locale: 
+locale_dir: locale
+locale_name: 
+main_page: README.md
+markup: rdoc
+output_decoration: true
+page_dir: 
+show_hash: false
+tab_width: 8
+template_stylesheets: []
+title: Coinage Trade Documentation
+visibility: :private
+webcvs: 

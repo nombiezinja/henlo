@@ -1,7 +1,14 @@
 require "henlo/helpers/util"
 
-module Henlo::Refreshable
+#
+## Module for generating refresh tokens
 
+module Henlo::Refreshable
+  
+  #
+  ## Generate refreshable token with a unix time for expiry, the type of token 
+  ## and the jwt identifier (a random string) encoded in the payload in addition to 
+  ## whatever was passed as payload when `generate_henlos` was called
   def self.generate_refreshable(options={})
     claim = options || nil 
     
@@ -16,7 +23,9 @@ module Henlo::Refreshable
       jti: claim[:jti]       
     ]
   end 
-  
+
+  #
+  ## Store jwt identifier in the app's database, in the table of the resource  
   def self.store_jti(resource, jti)
     resource.update_attribute(:refresh_token_jti, jti)
   end 

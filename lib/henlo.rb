@@ -5,10 +5,15 @@ require "henlo/authenticable"
 require "henlo/revocable"
 require "knock"
 
+#
+## Defines default initializing values and main method for generating tokens 
 module Henlo
-
-  # include Knock::Authenticable
   
+  #
+  ## Generates refresh and access tokens when method is called, allows the passing in of 
+  ## additional key value pairs to be encoded in the jwt payload
+  ## Returns the jwt identifier of the refresh token, as well as the expiry time in unix
+  ## seconds of the id token.
   def self.generate_henlos(options={})
     claim = options || nil 
     refresh_token_and_jti = Refreshable.generate_refreshable(options) 
@@ -30,8 +35,8 @@ module Henlo
   mattr_accessor :id_token_lifetime
   self.id_token_lifetime = 60 * 15
 
-  # Default way to setup Henlo. Run `rails generate henlo:install` to create
-  # a fresh initializer with all configuration values.
+  #  Default way to setup Henlo. Run `rails generate henlo:install` to create
+  ## a fresh initializer with all configuration values.
   def self.setup
     yield self
   end

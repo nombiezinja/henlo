@@ -1,22 +1,38 @@
 # Henlo
 
+Henlo is an opionated token-based authentication based on the gem Knock. Henlo offers an additional layer of token security by exposing methods for implementing the use of refresh tokens and id tokens. 
+
+For a beginning introduction to refresh token and id tokens, here is an article: 
+https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/
+
+Essentially, a refresh token with a long expiry time (weeks or months) is used to renew a short expiry time token, the id token. The id token is used to access resources when users make requests, and the refresh token is solely used to renew id tokens. This structure allows limiting the damage done by breached tokens. Refresh tokens can be blacklisted and revoked, whereas id tokens are only valid for a short period of time. 
+
 ## Installation
 
 Add this line to your application's Gemfile:
 
-```ruby
-gem 'henlo'
-```
+    $ gem 'henlo', :git => 'git://github.com/nombiezinja/henlo.git', :branch => 'master'
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
+To install Henlo and create a blank initializer file:
 
-    $ gem install henlo
+    $ rails g henlo:install
+
+To generate migration files for the model you wish to implement token authentication for: 
+
+    $ rails g henlo:migrations <MODEL>
+
+Replace `<MODEL>` with the name of your model (e.g. `rails g henlo:migrations User)
+
+You can customize the expiry time of the refresh and id tokens in the initializer file.
 
 ## Usage
+
+
+
 
 Methods you must define in your app:
 
@@ -54,7 +70,6 @@ Everyone interacting in the Henlo project’s codebases, issue trackers, chat ro
 
 
 ## TODOs
-* Make controller generator 
-* Make revokable logic 
+
 * Write tests
 * Write docs
