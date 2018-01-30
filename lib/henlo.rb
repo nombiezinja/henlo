@@ -9,10 +9,10 @@ module Henlo
 
   # include Knock::Authenticable
   
-  def self.generate_henlos(user, options={})
+  def self.generate_henlos(options={})
     claim = options || nil 
-    refresh_token_and_jti = Refreshable.generate_refreshable(user, options) 
-    id_token_and_exp = Identifiable.generate_identifiable(user, options)
+    refresh_token_and_jti = Refreshable.generate_refreshable(options) 
+    id_token_and_exp = Identifiable.generate_identifiable(options)
     tokens = Hash[
       id_token: id_token_and_exp[:token],
       refresh_token: refresh_token_and_jti[:token]

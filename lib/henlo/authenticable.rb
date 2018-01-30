@@ -1,4 +1,6 @@
 require "henlo/helpers/util"
+require 'active_record/errors'
+
 module Henlo::Authenticable
     
   def self.parse_token_type(token, options={})
@@ -15,7 +17,11 @@ module Henlo::Authenticable
   end 
 
   def self.parse_resource(payload, model)
-    model.capitalize.constantize.find(payload["sub"])
+    resource = model.capitalize.constantize.where(id: payload["sub"]).first
+    if resource.nil? 
+      raise ActiveRecord::RecordNotFound
+    end
+    resource
   end 
 
   def self.it_me?(token, model)
@@ -24,7 +30,6 @@ module Henlo::Authenticable
     resource = parse_resource(payload, model)
     case type 
     when "id"
-      Rails::ApplicationController.verify_user
       resource
     when "refresh"
       if it_suspicious?(resource) && it_not_fren?(resource)
@@ -44,8 +49,7 @@ module Henlo::Authenticable
     if claim["type"] == "id"
       raise ActionController::InvalidAuthenticityToken 
     else 
-      reauthenticate_strategy unless resource.nil?
-    end     
+      reauthenticate_strategy
+    end    
   end 
-
 end 

@@ -2,7 +2,7 @@ require "henlo/helpers/util"
 
 module Henlo::Refreshable
 
-  def self.generate_refreshable(model, options={})
+  def self.generate_refreshable(options={})
     claim = options || nil 
     
     claim.merge!({

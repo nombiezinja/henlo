@@ -2,7 +2,7 @@ require "henlo/helpers/util"
 
 module Henlo::Identifiable
 
-  def self.generate_identifiable(model, options={})
+  def self.generate_identifiable(options={})
     claim = options || nil 
    
     claim.merge!({
