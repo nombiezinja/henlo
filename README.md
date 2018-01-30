@@ -48,6 +48,9 @@ The following methods are also exposed to allow validation of non-expired Refres
 
 `Henlo::Authenticable.it_expired` handles expired tokens. Requests with expired id tokens are rejected, whereas requests with expired refresh tokens are then procesesed by a reauthentication strategy as defined by the user. You should define a method in your app that dictates how users are reauthenticated, then pass this method when you call the method like so:`Henlo::Authenticable.it_expired(reauthentication_method, token, model)`
 
+Run `Henlo::Revocable.token_blockt` to blacklist tokens manually.
+
+Run `Henlo::Revocable.token_rekt` periodically to purge database of expired tokens from Blacklisted Tokens table.
 
 ## Development
 
