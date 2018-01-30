@@ -8,6 +8,10 @@ module Henlo::Authenticable
     claim["type"]
   end 
   
+  def self.jti_match?(payload, resource)
+    payload["jti"] === resource.refresh_token_jti
+  end 
+
   def self.it_suspicious?(resource)
     resource.blacklist_check?    
   end 
@@ -35,7 +39,12 @@ module Henlo::Authenticable
       if it_suspicious?(resource) && it_not_fren?(resource)
         nil
       else 
-        resource      
+        if jti_match?(payload, resource)
+          resource
+        else 
+          Henlo::Revocable.token_blockt(payload, resource)
+          nil 
+        end       
       end 
     else 
       nil 
