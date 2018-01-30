@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module Henlo::Authenticable - Coinage Trade Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-it_expired">::it_expired</a>
+    
+    <li ><a href="#method-c-it_me-3F">::it_me?</a>
+    
+    <li ><a href="#method-c-it_not_fren-3F">::it_not_fren?</a>
+    
+    <li ><a href="#method-c-it_suspicious-3F">::it_suspicious?</a>
+    
+    <li ><a href="#method-c-jti_match-3F">::jti_match?</a>
+    
+    <li ><a href="#method-c-parse_resource">::parse_resource</a>
+    
+    <li ><a href="#method-c-parse_token_type">::parse_token_type</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-Henlo::Authenticable">
+  <h1 id="module-Henlo::Authenticable" class="module">
+    module Henlo::Authenticable
+  </h1>
+
+  <section class="description">
+    
+<p>Module</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-it_expired" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">it_expired</span><span
+            class="method-args">(reauthenticate_strategy, token, model)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This method is to be called before `it_me?` is called, so that expired
+tokens are treated before the authentication begins. Requests made with
+expired id tokens are rejected with an error.  Requests made with expired
+refresh tokens are then processed with “reauthentication_strategy.  This
+method is passed as an argument to `it_expired` by the app. You can define
+how  users are reauthenticated in your own app.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="it_expired-source">
+            <pre><span class="ruby-comment"># File lib/henlo/authenticable.rb, line 80</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">it_expired</span>(<span class="ruby-identifier">reauthenticate_strategy</span>, <span class="ruby-identifier">token</span>, <span class="ruby-identifier">model</span>)
+  <span class="ruby-identifier">token</span> = <span class="ruby-constant">Knock</span><span class="ruby-operator">::</span><span class="ruby-constant">AuthToken</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">token</span><span class="ruby-operator">:</span> <span class="ruby-identifier">token</span>, <span class="ruby-identifier">verify_options</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">verify_expiration</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>}).<span class="ruby-identifier">token</span>
+  <span class="ruby-identifier">claim</span> = <span class="ruby-constant">Knock</span><span class="ruby-operator">::</span><span class="ruby-constant">AuthToken</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">token</span><span class="ruby-operator">:</span> <span class="ruby-identifier">token</span>, <span class="ruby-identifier">verify_options</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">verify_expiration</span><span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>}).<span class="ruby-identifier">payload</span>
+  <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">parse_resource</span>(<span class="ruby-identifier">claim</span>, <span class="ruby-identifier">model</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">claim</span>[<span class="ruby-string">&quot;type&quot;</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;id&quot;</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ActionController</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidAuthenticityToken</span> 
+  <span class="ruby-keyword">else</span> 
+    <span class="ruby-identifier">reauthenticate_strategy</span>
+  <span class="ruby-keyword">end</span>    
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-it_me-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">it_me?</span><span
+            class="method-args">(token, model)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Authenticates resource by first determining the treatment based on the type
+of token.  Requests with valid id tokens will be processed.  Requests with
+refresh tokens will be checked for 1) whether the resource has been flagged
+for blacklist check and if yes, 2) whether the token&#39;s jwt identifier
+has been flaglisted. If neither 1) nor 2) is established, the token will be
+checked for a match of the jwt identifier The resource is returned if all
+these checks are passed.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="it_me-3F-source">
+            <pre><span class="ruby-comment"># File lib/henlo/authenticable.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">it_me?</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">model</span>)
+  <span class="ruby-identifier">type</span> = <span class="ruby-identifier">parse_token_type</span>(<span class="ruby-identifier">token</span>)
+  <span class="ruby-identifier">payload</span> = <span class="ruby-constant">Knock</span><span class="ruby-operator">::</span><span class="ruby-constant">AuthToken</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">token</span><span class="ruby-operator">:</span> <span class="ruby-identifier">token</span>).<span class="ruby-identifier">payload</span>
+  <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">parse_resource</span>(<span class="ruby-identifier">payload</span>, <span class="ruby-identifier">model</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span> 
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;id&quot;</span>
+    <span class="ruby-identifier">resource</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;refresh&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">it_suspicious?</span>(<span class="ruby-identifier">resource</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">it_not_fren?</span>(<span class="ruby-identifier">resource</span>)
+      <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">else</span> 
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">jti_match?</span>(<span class="ruby-identifier">payload</span>, <span class="ruby-identifier">resource</span>)
+        <span class="ruby-identifier">resource</span>
+      <span class="ruby-keyword">else</span> 
+        <span class="ruby-constant">Henlo</span><span class="ruby-operator">::</span><span class="ruby-constant">Revocable</span>.<span class="ruby-identifier">token_blockt</span>(<span class="ruby-identifier">payload</span>, <span class="ruby-identifier">resource</span>)
+        <span class="ruby-keyword">nil</span> 
+      <span class="ruby-keyword">end</span>       
+    <span class="ruby-keyword">end</span> 
+  <span class="ruby-keyword">else</span> 
+    <span class="ruby-keyword">nil</span> 
+  <span class="ruby-keyword">end</span> 
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-it_not_fren-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">it_not_fren?</span><span
+            class="method-args">(resource)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Check the blacklisted tokens table to see whether the token&#39;s jwt
+identifier has been blacklisted</p>
+          
+          
+
+          
+          <div class="method-source-code" id="it_not_fren-3F-source">
+            <pre><span class="ruby-comment"># File lib/henlo/authenticable.rb, line 30</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">it_not_fren?</span>(<span class="ruby-identifier">resource</span>)
+  <span class="ruby-constant">BlacklistedToken</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">token_jti</span><span class="ruby-operator">:</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">refresh_token_jti</span>).<span class="ruby-identifier">first</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-it_suspicious-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">it_suspicious?</span><span
+            class="method-args">(resource)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Check the resource to see if it has been flagged for blacklist check</p>
+          
+          
+
+          
+          <div class="method-source-code" id="it_suspicious-3F-source">
+            <pre><span class="ruby-comment"># File lib/henlo/authenticable.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">it_suspicious?</span>(<span class="ruby-identifier">resource</span>)
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">blacklist_check?</span>    
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-jti_match-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">jti_match?</span><span
+            class="method-args">(payload, resource)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Match the token jwt identifier with what is stored in the database for the
+resource, a lack of match indicates suspicious activities</p>
+          
+          
+
+          
+          <div class="method-source-code" id="jti_match-3F-source">
+            <pre><span class="ruby-comment"># File lib/henlo/authenticable.rb, line 17</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">jti_match?</span>(<span class="ruby-identifier">payload</span>, <span class="ruby-identifier">resource</span>)
+  <span class="ruby-identifier">payload</span>[<span class="ruby-string">&quot;jti&quot;</span>] <span class="ruby-operator">===</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">refresh_token_jti</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-parse_resource" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_resource</span><span
+            class="method-args">(payload, model)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parse the resource as identified by the id encoded in the jwt with the key
+“sub”</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse_resource-source">
+            <pre><span class="ruby-comment"># File lib/henlo/authenticable.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse_resource</span>(<span class="ruby-identifier">payload</span>, <span class="ruby-identifier">model</span>)
+  <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">model</span>.<span class="ruby-identifier">capitalize</span>.<span class="ruby-identifier">constantize</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">payload</span>[<span class="ruby-string">&quot;sub&quot;</span>]).<span class="ruby-identifier">first</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">nil?</span> 
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">RecordNotFound</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">resource</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-c-parse_token_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_token_type</span><span
+            class="method-args">(token, options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the token type from the jwt payload</p>
+          
+          
+
+          
+          <div class="method-source-code" id="parse_token_type-source">
+            <pre><span class="ruby-comment"># File lib/henlo/authenticable.rb, line 9</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse_token_type</span>(<span class="ruby-identifier">token</span>, <span class="ruby-identifier">options</span>={})
+  <span class="ruby-identifier">claim</span> = <span class="ruby-constant">Knock</span><span class="ruby-operator">::</span><span class="ruby-constant">AuthToken</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">token</span><span class="ruby-operator">:</span> <span class="ruby-identifier">token</span>, <span class="ruby-identifier">verify_options</span><span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>).<span class="ruby-identifier">payload</span>
+  <span class="ruby-identifier">claim</span>[<span class="ruby-string">&quot;type&quot;</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
