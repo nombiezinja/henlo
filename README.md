@@ -27,28 +27,27 @@ To generate migration files for the model you wish to implement token authentica
 
 Replace `<MODEL>` with the name of your model (e.g. `rails g henlo:migrations User)
 
-You can customize the expiry time of the refresh and id tokens in the initializer file.
 
 ## Usage
 
+Henlo was written to work with different authentication strategies, but you will need to have set up Knock successfully in order to use Henlo. 
 
+Call `Henlo.generate_henlos` in your app to receive a hash consisting of an Id Token, a Refresh Token, the Id Token's expiry time in unix seconds, and the Refresh Token's jwt identifier. Pass any information you would like to have encoded in the jwt's payload as an argument in a hash to this method. It is suggested you pass `{sub: <MODEL>.id}`, since a method `Henlo::Authenticable.parse_resource` is exposed to return the resource as identified by the token, using this encoded key value as the id of the resource. 
 
+Call `Henlo.store_jti` in your app to store the jti of the Refresh Token in your model. This jti will be used to identify any suspicious activity. 
 
-Methods you must define in your app:
+For the duration of the Refresh Token's expiry time, the user is considered logged in and will not need to reauthenticate. You can customize the expiry time of the refresh and id tokens in the initializer file. Once the refresh token has expired (which implies the user has not accessed your app for an extended period of time), they should reauthenticate and verify their identity to receive a new set of tokens. 
 
-current_user 
+The following methods are also exposed to allow validation of non-expired Refresh Tokens before issuing a new Refresh Token and a new Id Token: 
 
-verify_user
+`Henlo::Authenticable.it_suspicious?` checks whether the resource has be flagged as needing a blacklist check, and if this method returns true, `Henlo::Authenticable.it_not_fren?` checks the table "Blacklisted Tokens" to see whether the token sent with the request has a jwt identifier encoded has been blacklisted. 
 
-reissue_tokens
+`Henlo::Authenticable.jti_match?` checks wither the resource's token identifier as stored in the database matches the request token's identifier. If there is no match, it means at some point this particular token has already been used for another request, issuing another new refresh token, implying a breach. 
 
-Uses Knock methods:
+`Henlo::Authenticable.it_me?` should be called in your app's user authentication method. This method performs the above checks and returns the resource if all checks are passed. This method also blacklists suspicious tokens when the jti_match check does not pass. 
 
-authenticate_user (therefore you must require the Knock module as per Knock docs)
+`Henlo::Authenticable.it_expired` handles expired tokens. Requests with expired id tokens are rejected, whereas requests with expired refresh tokens are then procesesed by a reauthentication strategy as defined by the user. You should define a method in your app that dictates how users are reauthenticated, then pass this method when you call the method like so:`Henlo::Authenticable.it_expired(reauthentication_method, token, model)`
 
-Uses payload id to find resource
-
-rescue from jwt expired and invalid authenticity token
 
 ## Development
 
